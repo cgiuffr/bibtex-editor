@@ -17,8 +17,11 @@ booktitle_subs = {
 }
 
 title_caps = {
-    'Chrome', 'Clang', 'C/C++', 'C++', 'Linux', 'LLVM', 'Spectre', 'ASLR', 'KASLR', 'Intel', 'TSX', 'SMAP', 'SMEP', 'OS'
+    'Chrome', 'Firefox', 'Valgrind', 'Clang', 'C', 'Linux', 'Windows', 'Spectre', 'Meltdown', 'Intel', 'Dr'
 }
+title_strip_caps =      True # Strip existing curly braces
+title_camel_caps =      True # Capitalize camel-case words
+title_colon_caps =      True # Capitalize after ': '
 title_fix_escaping =    True # Fix things like $\{$AMD$\}$
 
 latex_inputs =          [] # Optional list of 'latexfile1', 'latexfile2', etc. to output bibliography for

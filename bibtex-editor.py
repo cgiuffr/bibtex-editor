@@ -12,6 +12,9 @@ stats = {
     'entries_dropped': 0,
     'fields_dropped_or_hidden': 0,
     'booktitles_replaced': 0,
+    'title_caps_stripped': 0,
+    'title_camel_caps_added': 0,
+    'title_colon_caps_added': 0,
     'title_caps_replaced': 0,
     'title_escapes_fixed': 0
 }
@@ -54,13 +57,6 @@ def process_title(params, entry):
     if not title:
         return
 
-    for cap in params.title_caps:
-        (match, num_subs) = re.subn(
-            rf'([^{{]\b)({re.escape(cap)})(\b[^}}])', rf'\1{{{cap}}}\3', title.value, flags=re.IGNORECASE)
-        if num_subs > 0:
-            title.value = match
-            stats['title_caps_replaced'] += num_subs
-
     if params.title_fix_escaping:
         p1 = re.escape('$\{$')
         p2 = re.escape('$\}$')
@@ -68,6 +64,31 @@ def process_title(params, entry):
         (title.value, num_subs) = re.subn(rf'{p2}', '}', title.value)
         if num_subs > 0:
             stats['title_escapes_fixed'] += num_subs
+
+    if params.title_strip_caps:
+        (title.value, num_subs) = re.subn(rf'{{', '', title.value)
+        (title.value, num_subs) = re.subn(rf'}}', '', title.value)
+        if num_subs > 0:
+            stats['title_caps_stripped'] += num_subs
+
+    if params.title_camel_caps:
+        (match, num_subs) = re.subn(rf'(?<!{{)\b(\w+[A-Z]\w*)\b(?!}})', rf'{{\1}}', title.value)
+        if num_subs > 0:
+            title.value = match
+            stats['title_camel_caps_added'] += num_subs
+
+    if params.title_colon_caps:
+        (match, num_subs) = re.subn(rf'(:\s)([a-zA-Z])(\w*)', lambda m : m.group(1) + rf'{{' + m.group(2).upper() + m.group(3) + rf'}}', title.value)
+        if num_subs > 0:
+            title.value = match
+            stats['title_colon_caps_added'] += num_subs
+
+    for cap in params.title_caps:
+        (match, num_subs) = re.subn(
+            rf'(?<!{{)\b({re.escape(cap)})\b(?!}})', rf'{{{cap}}}', title.value, flags=re.IGNORECASE)
+        if num_subs > 0:
+            title.value = match
+            stats['title_caps_replaced'] += num_subs
 
     entry.set_field(title)
     return
