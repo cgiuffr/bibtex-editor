@@ -3,7 +3,7 @@ BibTex Editor. Takes a BibTex file in input and produces a processed one in outp
 
 Dependencies:
 * Python 3.7+.
-* BibtexParser, installation instructions: https://bibtexparser.readthedocs.io/en/main/install.html
+* BibtexParser v2, installation instructions: https://bibtexparser.readthedocs.io/en/main/install.html
 
 Relevant API documentation:
 * https://bibtexparser.readthedocs.io/en/main/bibtexparser.html
