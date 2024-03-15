@@ -10,6 +10,8 @@ import bibtexparser.model as m
 stats = {
     'latex_cites_found': 0,
     'entries_dropped': 0,
+    'dup_keys': 0,
+    'dup_titles': 0,
     'fields_dropped_or_hidden': 0,
     'booktitles_replaced': 0,
     'title_caps_stripped': 0,
@@ -19,6 +21,7 @@ stats = {
     'title_escapes_fixed': 0
 }
 
+title_idx = set()
 
 def process_entry_extra_fields(params, entry):
     if not params.extra_fields_mode:
@@ -56,6 +59,13 @@ def process_title(params, entry):
     title = entry.pop('title')
     if not title:
         return
+
+    title_hash = re.sub(r'[^\w]', '', title.value).lower()
+    if title_hash in title_idx:
+        logging.warning(f'Found possible duplicate title: "{title.value}"')
+        stats['dup_titles'] += 1
+    else:
+        title_idx.add(title_hash)
 
     if params.title_fix_escaping:
         p1 = re.escape('$\{$')
@@ -113,8 +123,17 @@ def main():
 
     # Parse input
     library = bibtexparser.parse_file(params.bibtex_input)
-    if len(library.failed_blocks) > 0:
-        logging.error("Some blocks failed to parse!")
+    num_error_blocks = len(library.failed_blocks)
+    ignored_blocks = []
+    if num_error_blocks > 0 and params.ignore_dup_keys:
+        for b in library.failed_blocks:
+            if isinstance(b, bibtexparser.model.DuplicateBlockKeyBlock):
+                ignored_blocks.append(b)
+                stats['dup_keys'] += 1
+    num_error_blocks -= len(ignored_blocks)
+    library.remove(ignored_blocks)
+    if num_error_blocks > 0:
+        logging.error("Some blocks failed to parse:\n- " + '\n- '.join([str(b.error) for b in library.failed_blocks]))
         sys.exit(1)
     logging.info(f"Parsed {len(library.blocks)} blocks, including:"
                  f"\n\t{len(library.entries)} entries"
