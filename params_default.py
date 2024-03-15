@@ -17,7 +17,7 @@ booktitle_subs = {
 }
 
 title_caps = {
-    'Chrome', 'Firefox', 'Valgrind', 'Clang', 'C', 'Linux', 'Windows', 'Spectre', 'Meltdown', 'Intel', 'Dr'
+    'Chrome', 'Firefox', 'Valgrind', 'Clang', 'C', 'Linux', 'Windows', 'Spectre', 'Meltdown', 'Intel', 'Mozilla', 'Google', 'Microsoft', 'Apple', 'ARM', 'Rust', 'Java', 'Python', 'JavaScript', 'Xen', 'Rowhammer', 'Rowhammering', 'VTable', 'Android', 'iOS', 'Dr'
 }
 title_strip_caps =      True # Strip existing curly braces
 title_camel_caps =      True # Capitalize camel-case words
