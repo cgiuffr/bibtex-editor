@@ -22,7 +22,7 @@ stats = {
     'title_escapes_fixed': 0
 }
 
-title_idx = set()
+title_idx = {}
 
 
 def process_entry_extra_fields(params, entry):
@@ -57,17 +57,19 @@ def process_entry_booktitle(params, entry):
     return
 
 
-def process_title(params, entry):
+def process_entry_title(params, entry):
     title = entry.pop('title')
     if not title:
         return
 
     title_hash = re.sub(r'[^\w]', '', title.value).lower()
     if title_hash in title_idx:
-        logging.warning(f'Found possible duplicate title: "{title.value}"')
+        e = title_idx[title_hash]
+        e_title = e.get('title')
+        logging.warning(f'Found possible duplicate titles:\n - "{e.key}" -> "{e_title.value}"\n - "{entry.key}" -> "{title.value}"')
         stats['dup_titles'] += 1
     else:
-        title_idx.add(title_hash)
+        title_idx[title_hash] = entry
 
     if params.title_fix_escaping:
         p1 = re.escape('$\{$')
@@ -111,7 +113,7 @@ def process_title(params, entry):
 def process_entry(params, entry):
     process_entry_extra_fields(params, entry)
     process_entry_booktitle(params, entry)
-    process_title(params, entry)
+    process_entry_title(params, entry)
 
     return
 
