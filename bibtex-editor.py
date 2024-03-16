@@ -3,6 +3,7 @@
 import sys
 import logging
 import re
+import pprint
 
 import bibtexparser
 import bibtexparser.model as m
@@ -169,7 +170,8 @@ def main():
         stats['entries_dropped'] = len(dropped_entries)
         for e in dropped_entries:
             library.remove(e)
-    logging.info(f'Stats={stats}')
+    logging.info('Stats:')
+    pprint.pprint(stats)
 
     # Write output
     with open(params.bibtex_output, "w", encoding=params.bibtex_encoding) as f:
