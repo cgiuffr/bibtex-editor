@@ -155,15 +155,16 @@ def main():
     stats['latex_cites_found'] = len(cites)
 
     # Process entries
-    dropped_entries = []
-    for e in library.entries:
-        if e.key not in cites:
-            dropped_entries.append(e)
-            continue
-        process_entry(params, e)
-    stats['entries_dropped'] = len(dropped_entries)
-    for e in dropped_entries:
-        library.remove(e)
+    if len(params.latex_inputs) > 0:
+        dropped_entries = []
+        for e in library.entries:
+            if e.key not in cites:
+                dropped_entries.append(e)
+                continue
+            process_entry(params, e)
+        stats['entries_dropped'] = len(dropped_entries)
+        for e in dropped_entries:
+            library.remove(e)
     logging.info(f'Stats={stats}')
 
     # Write output
