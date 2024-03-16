@@ -20,6 +20,7 @@ stats = {
     'title_colon_caps_added': 0,
     'title_caps_replaced': 0,
     'title_escapes_fixed': 0,
+    'author_commas_dropped': 0,
     'misc_entries_fixed': 0
 }
 
@@ -35,7 +36,7 @@ def process_entry_extra_fields(params, entry):
         if f.key in params.fields_order:
             continue
         extra_fields.append(f)
-    
+
     for f in extra_fields:
         myfield = entry.pop(f.key)
         stats['fields_dropped_or_hidden'] += 1
@@ -117,6 +118,27 @@ def process_entry_title(params, entry):
     return
 
 
+def process_entry_author(params, entry):
+    author = entry.pop('author')
+    if not author or not re.match(r'.*,.*', author.value):
+        return
+
+    tokens = re.split(r'\s+and\s+', author.value, flags=re.IGNORECASE)
+    authors = []
+    for t in tokens:
+        names = re.split(r'\s*,\s*', t)
+        if len(names) < 2:
+            full_name = t
+        else:
+            full_name = names[-1] + " " + " ".join(names[:-1])
+        authors.append(full_name)
+    author.value = " and ".join(authors)
+    stats['author_commas_dropped'] += 1
+
+    entry.set_field(author)
+    return
+
+
 def process_misc_entry(params, entry):
     if not params.misc_entry_fix_url or entry.entry_type != 'misc':
         return
@@ -158,6 +180,7 @@ def process_entry(params, entry):
     process_entry_extra_fields(params, entry)
     process_entry_booktitle(params, entry)
     process_entry_title(params, entry)
+    process_entry_author(params, entry)
     process_misc_entry(params, entry)
     process_entry_field_order(params, entry)
 
