@@ -30,13 +30,18 @@ def process_entry_extra_fields(params, entry):
     if not params.extra_fields_mode:
         return
 
-    for field in params.extra_fields:
-        myfield = entry.pop(field)
-        if myfield:
-            stats['fields_dropped_or_hidden'] += 1
-            if params.extra_fields_mode == 'hide':
-                myfield.key = 'HIDE' + myfield.key
-                entry.set_field(myfield)
+    extra_fields = []
+    for f in entry.fields:
+        if f.key in params.fields_order:
+            continue
+        extra_fields.append(f)
+    
+    for f in extra_fields:
+        myfield = entry.pop(f.key)
+        stats['fields_dropped_or_hidden'] += 1
+        if params.extra_fields_mode == 'hide':
+            myfield.key = 'HIDE' + myfield.key
+            entry.set_field(myfield)
 
     return
 

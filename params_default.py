@@ -7,22 +7,23 @@ bibtex_encoding =       'UTF-8'
 bibtex_input =          '<your_file_here.bib>'
 bibtex_output =         '<your_file_here.bib>'
 
-strip_dup_keys =       True # Strip duplicate entry keys
+strip_dup_keys =        True # Strip duplicate entry keys
 
-extra_fields =          ['volume', 'number', 'month', 'address', 'annote', 'crossref', 'doi', 'edition', 'editor', 'email', 'organization', 'pages', 'publisher', 'series', 'type', 'note', 'issn', 'isbn', 'location', 'shorttitle', 'abstract', 'eventtitle', 'urldate', 'langid', 'file', 'keywords'] # Optional list of extra 'field1', 'field2', etc. for each entry
-extra_fields_mode =     'drop' # 'drop', 'hide', or None
+extra_fields_mode =     'drop' # 'drop', 'hide', or None (for fields not in fields_order)
 
-sort_fields =           True # Sort fields according to the order below
-fields_order =          ['title', 'author', 'booktitle', 'journal', 'howpublished', 'year']
+sort_fields =           True # Sort fields according to fields_order
+fields_order =          [
+    'title', 'author', 'booktitle', 'journal', 'howpublished', 'year', 'institution'
+]
 
-booktitle_subs = {
-                        r'.*IEEE symposium on security and privacy.*' : 'S\&P',
-                        r'.*USENIX Security.*' : 'USENIX Security',
-                        r'.*Network and Distributed System Security.*' : 'NDSS',
-                        r'.*Conference on Computer and Communications Security.*' : 'CCS'
+booktitle_subs =        {
+    r'.*IEEE symposium on security and privacy.*' : 'S\&P',
+    r'.*USENIX Security.*' : 'USENIX Security',
+    r'.*Network and Distributed System Security.*' : 'NDSS',
+    r'.*Conference on Computer and Communications Security.*' : 'CCS'
 }
 
-title_caps = {
+title_caps =            {
     'Chrome', 'Firefox', 'Valgrind', 'Clang', 'C', 'Linux', 'Windows', 'Spectre', 'Meltdown', 'Intel', 'Mozilla', 'Google', 'Microsoft', 'Apple', 'ARM', 'Rust', 'Java', 'Python', 'JavaScript', 'Xen', 'Rowhammer', 'Rowhammering', 'VTable', 'Android', 'iOS', 'Dr'
 }
 title_strip_caps =      True # Strip existing curly braces
