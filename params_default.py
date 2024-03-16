@@ -7,7 +7,7 @@ bibtex_encoding =       'UTF-8'
 bibtex_input =          '<your_file_here.bib>'
 bibtex_output =         '<your_file_here.bib>'
 
-ignore_dup_keys =       True # Ignore duplicate entry keys
+strip_dup_keys =       True # Strip duplicate entry keys
 
 extra_fields =          ['volume', 'number', 'month', 'address', 'annote', 'crossref', 'doi', 'edition', 'editor', 'email', 'organization', 'pages', 'publisher', 'series', 'type', 'note', 'issn', 'isbn', 'location', 'shorttitle', 'abstract', 'eventtitle', 'urldate', 'langid', 'file', 'keywords'] # Optional list of extra 'field1', 'field2', etc. for each entry
 extra_fields_mode =     'drop' # 'drop', 'hide', or None

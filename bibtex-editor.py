@@ -128,14 +128,14 @@ def main():
     library = bibtexparser.parse_file(
         params.bibtex_input, encoding=params.bibtex_encoding)
     num_error_blocks = len(library.failed_blocks)
-    ignored_blocks = []
-    if num_error_blocks > 0 and params.ignore_dup_keys:
+    stripped_blocks = []
+    if num_error_blocks > 0 and params.strip_dup_keys:
         for b in library.failed_blocks:
             if isinstance(b, bibtexparser.model.DuplicateBlockKeyBlock):
-                ignored_blocks.append(b)
+                stripped_blocks.append(b)
                 stats['dup_keys'] += 1
-    num_error_blocks -= len(ignored_blocks)
-    library.remove(ignored_blocks)
+    num_error_blocks -= len(stripped_blocks)
+    library.remove(stripped_blocks)
     if num_error_blocks > 0:
         logging.error("Some blocks failed to parse:\n- " +
                       '\n- '.join([str(b.error) for b in library.failed_blocks]))
