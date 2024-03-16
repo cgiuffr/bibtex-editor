@@ -66,7 +66,8 @@ def process_entry_title(params, entry):
     if title_hash in title_idx:
         e = title_idx[title_hash]
         e_title = e.get('title')
-        logging.warning(f'Found possible duplicate titles:\n - "{e.key}" -> "{e_title.value}"\n - "{entry.key}" -> "{title.value}"')
+        logging.warning(
+            f'Found possible duplicate titles:\n - "{e.key}" -> "{e_title.value}"\n - "{entry.key}" -> "{title.value}"')
         stats['dup_titles'] += 1
     else:
         title_idx[title_hash] = entry
