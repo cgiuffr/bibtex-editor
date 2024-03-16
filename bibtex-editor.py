@@ -5,6 +5,8 @@ import logging
 import re
 import pprint
 
+from collections import defaultdict
+
 import bibtexparser
 import bibtexparser.model as m
 
@@ -188,6 +190,22 @@ def process_entry(params, entry):
     return
 
 
+def entry_to_text(params, entry, count):
+    field_map = defaultdict(lambda: "")
+    field_map['count'] = count
+    for f in entry.fields:
+        key = f.key
+        val = re.sub(rf'}}|{{|(\\url)', '', f.value)
+        if key == 'author':
+            val = re.sub(r'\s+and\s+', ', ', val, flags=re.IGNORECASE)
+        elif key not in ['url', 'howpublished']:
+            val = re.sub(r"(?:(?<=\W)|^)\w(?=\w)",
+                         lambda x: x.group(0).upper(), val)
+        field_map[key] = val
+
+    return params.text_output_format.format_map(field_map)
+
+
 def main():
     try:
         import params
@@ -248,6 +266,14 @@ def main():
     # Write output
     with open(params.bibtex_output, "w", encoding=params.bibtex_encoding) as f:
         bibtexparser.write_file(f, library)
+
+    if not params.text_output:
+        return
+    with open(params.text_output, "w", encoding=params.bibtex_encoding) as f:
+        count = 1
+        for e in library.entries:
+            f.write(entry_to_text(params, e, count) + "\n")
+            count += 1
 
 
 if __name__ == '__main__':

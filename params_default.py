@@ -36,3 +36,7 @@ author_drop_commas =    True # {Lastname, Firstname} --> {Firstname Lastname}
 misc_entry_fix_url =    True # Ensure misc entries have a single howpublished={\url{...}} field.
 
 latex_inputs =          [] # Optional list of 'latexfile1', 'latexfile2', etc. to output bibliography for
+
+text_output =           None # Optional text output
+
+text_output_format = '[{count}] {author}, "{title}," in {booktitle}{journal}{howpublished}, {year}.'
