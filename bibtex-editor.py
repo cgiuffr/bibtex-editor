@@ -110,11 +110,23 @@ def process_entry_title(params, entry):
     entry.set_field(title)
     return
 
+def process_entry_field_order(params, entry):
+    if not params.sort_fields:
+        return
+
+    entry.fields.sort(
+        key=lambda val: 100 if val.key not in params.fields_order else params.fields_order.index(
+            val.key)
+    )
+
+    return
+
 
 def process_entry(params, entry):
     process_entry_extra_fields(params, entry)
     process_entry_booktitle(params, entry)
     process_entry_title(params, entry)
+    process_entry_field_order(params, entry)
 
     return
 

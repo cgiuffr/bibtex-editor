@@ -12,6 +12,9 @@ strip_dup_keys =       True # Strip duplicate entry keys
 extra_fields =          ['volume', 'number', 'month', 'address', 'annote', 'crossref', 'doi', 'edition', 'editor', 'email', 'organization', 'pages', 'publisher', 'series', 'type', 'note', 'issn', 'isbn', 'location', 'shorttitle', 'abstract', 'eventtitle', 'urldate', 'langid', 'file', 'keywords'] # Optional list of extra 'field1', 'field2', etc. for each entry
 extra_fields_mode =     'drop' # 'drop', 'hide', or None
 
+sort_fields =           True # Sort fields according to the order below
+fields_order =          ['title', 'author', 'booktitle', 'journal', 'howpublished', 'year']
+
 booktitle_subs = {
                         r'.*IEEE symposium on security and privacy.*' : 'S\&P',
                         r'.*USENIX Security.*' : 'USENIX Security',
