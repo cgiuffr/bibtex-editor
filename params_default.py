@@ -30,4 +30,6 @@ title_camel_caps =      True # Capitalize camel-case words
 title_colon_caps =      True # Capitalize after ': '
 title_fix_escaping =    True # Fix things like $\{$AMD$\}$
 
+misc_entry_fix_url =    True # Ensure misc entries have a single howpublished={\url{...}} field.
+
 latex_inputs =          [] # Optional list of 'latexfile1', 'latexfile2', etc. to output bibliography for

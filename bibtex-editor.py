@@ -19,7 +19,8 @@ stats = {
     'title_camel_caps_added': 0,
     'title_colon_caps_added': 0,
     'title_caps_replaced': 0,
-    'title_escapes_fixed': 0
+    'title_escapes_fixed': 0,
+    'misc_entries_fixed': 0
 }
 
 title_idx = {}
@@ -110,6 +111,32 @@ def process_entry_title(params, entry):
     entry.set_field(title)
     return
 
+
+def process_misc_entry(params, entry):
+    if not params.misc_entry_fix_url or entry.entry_type != 'misc':
+        return
+
+    f = entry.pop('howpublished')
+    if f:
+        f2 = entry.pop('url')
+        if not f2 and re.match(r'\\url{.*}', f.value):
+            return
+    else:
+        f = entry.pop('url')
+    if not f:
+        return
+
+    url = re.sub(rf'\\url{{(.*)}}', r'\1', f.value)
+    url = re.sub(rf'}}|{{', '', url)
+
+    f.key = 'howpublished'
+    f.value = f'\\url{{{url}}}'
+    entry.set_field(f)
+    stats['misc_entries_fixed'] += 1
+
+    return
+
+
 def process_entry_field_order(params, entry):
     if not params.sort_fields:
         return
@@ -126,6 +153,7 @@ def process_entry(params, entry):
     process_entry_extra_fields(params, entry)
     process_entry_booktitle(params, entry)
     process_entry_title(params, entry)
+    process_misc_entry(params, entry)
     process_entry_field_order(params, entry)
 
     return
