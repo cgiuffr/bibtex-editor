@@ -195,7 +195,8 @@ def entry_to_text(params, entry, count):
     field_map['count'] = count
     for f in entry.fields:
         key = f.key
-        val = re.sub(rf'}}|{{|(\\url)', '', f.value)
+        val = re.sub(rf'}}|{{|(\\url)', '', f.value).replace("\n", "")
+        val = re.sub(r'\s+', ' ', val)
         if key == 'author':
             val = re.sub(r'\s+and\s+', ', ', val, flags=re.IGNORECASE)
         elif key not in ['url', 'howpublished']:

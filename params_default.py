@@ -39,4 +39,4 @@ latex_inputs =          [] # Optional list of 'latexfile1', 'latexfile2', etc. t
 
 text_output =           None # Optional text output
 
-text_output_format = '[{count}] {author}, "{title}," in {booktitle}{journal}{howpublished}, {year}.'
+text_output_format = '[{count}] {author}, "{title}," in {booktitle}{journal}{howpublished}, {year}.\n'
