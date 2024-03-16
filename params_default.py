@@ -8,7 +8,7 @@ bibtex_output =         '<your_file_here.bib>'
 
 ignore_dup_keys =       True # Ignore duplicate entry keys
 
-extra_fields =          ['volume', 'number', 'month', 'address', 'annote', 'crossref', 'doi', 'edition', 'editor', 'email', 'organization', 'pages', 'publisher', 'series', 'type', 'note', 'issn', 'isbn'] # Optional list of extra 'field1', 'field2', etc. for each entry
+extra_fields =          ['volume', 'number', 'month', 'address', 'annote', 'crossref', 'doi', 'edition', 'editor', 'email', 'organization', 'pages', 'publisher', 'series', 'type', 'note', 'issn', 'isbn', 'location', 'shorttitle', 'abstract', 'eventtitle', 'urldate', 'langid', 'file', 'keywords'] # Optional list of extra 'field1', 'field2', etc. for each entry
 extra_fields_mode =     'drop' # 'drop', 'hide', or None
 
 booktitle_subs = {
