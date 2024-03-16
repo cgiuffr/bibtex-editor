@@ -23,6 +23,7 @@ stats = {
 
 title_idx = set()
 
+
 def process_entry_extra_fields(params, entry):
     if not params.extra_fields_mode:
         return
@@ -82,13 +83,15 @@ def process_title(params, entry):
             stats['title_caps_stripped'] += num_subs
 
     if params.title_camel_caps:
-        (match, num_subs) = re.subn(rf'(?<!{{)\b(\w+[A-Z]\w*)\b(?!}})', rf'{{\1}}', title.value)
+        (match, num_subs) = re.subn(
+            rf'(?<!{{)\b(\w+[A-Z]\w*)\b(?!}})', rf'{{\1}}', title.value)
         if num_subs > 0:
             title.value = match
             stats['title_camel_caps_added'] += num_subs
 
     if params.title_colon_caps:
-        (match, num_subs) = re.subn(rf'(:\s)([a-zA-Z])(\w*)', lambda m : m.group(1) + rf'{{' + m.group(2).upper() + m.group(3) + rf'}}', title.value)
+        (match, num_subs) = re.subn(rf'(:\s)([a-zA-Z])(\w*)', lambda m: m.group(
+            1) + rf'{{' + m.group(2).upper() + m.group(3) + rf'}}', title.value)
         if num_subs > 0:
             title.value = match
             stats['title_colon_caps_added'] += num_subs
@@ -134,7 +137,8 @@ def main():
     num_error_blocks -= len(ignored_blocks)
     library.remove(ignored_blocks)
     if num_error_blocks > 0:
-        logging.error("Some blocks failed to parse:\n- " + '\n- '.join([str(b.error) for b in library.failed_blocks]))
+        logging.error("Some blocks failed to parse:\n- " +
+                      '\n- '.join([str(b.error) for b in library.failed_blocks]))
         sys.exit(1)
     logging.info(f"Parsed {len(library.blocks)} blocks, including:"
                  f"\n\t{len(library.entries)} entries"
