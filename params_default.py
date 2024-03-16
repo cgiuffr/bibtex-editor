@@ -13,7 +13,7 @@ extra_fields_mode =     'drop' # 'drop', 'hide', or None (for fields not in fiel
 
 sort_fields =           True # Sort fields according to fields_order
 fields_order =          [
-    'title', 'author', 'booktitle', 'journal', 'howpublished', 'year', 'institution'
+    'title', 'author', 'booktitle', 'journal', 'howpublished', 'url', 'year', 'institution'
 ]
 
 booktitle_subs =        {

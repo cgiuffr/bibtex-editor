@@ -119,9 +119,10 @@ def process_entry_title(params, entry):
 
 
 def process_entry_author(params, entry):
-    author = entry.pop('author')
+    author = entry.get('author')
     if not author or not re.match(r'.*,.*', author.value):
         return
+    author = entry.pop('author')
 
     tokens = re.split(r'\s+and\s+', author.value, flags=re.IGNORECASE)
     authors = []
