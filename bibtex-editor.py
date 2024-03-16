@@ -122,7 +122,8 @@ def main():
     logging.basicConfig(format=params.log_format, level=params.log_level)
 
     # Parse input
-    library = bibtexparser.parse_file(params.bibtex_input)
+    library = bibtexparser.parse_file(
+        params.bibtex_input, encoding=params.bibtex_encoding)
     num_error_blocks = len(library.failed_blocks)
     ignored_blocks = []
     if num_error_blocks > 0 and params.ignore_dup_keys:
@@ -166,7 +167,8 @@ def main():
     logging.info(f'Stats={stats}')
 
     # Write output
-    bibtexparser.write_file(params.bibtex_output, library)
+    with open(params.bibtex_output, "w", encoding=params.bibtex_encoding) as f:
+        bibtexparser.write_file(f, library)
 
 
 if __name__ == '__main__':

@@ -2,6 +2,7 @@ import logging
 
 log_format =            '[%(asctime)s] %(levelname)s: %(message)s'
 log_level =             logging.INFO
+bibtex_encoding =       'UTF-8'
 
 bibtex_input =          '<your_file_here.bib>'
 bibtex_output =         '<your_file_here.bib>'
