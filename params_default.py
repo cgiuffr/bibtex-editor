@@ -37,6 +37,6 @@ misc_entry_fix_url =    True # Ensure misc entries have a single howpublished={\
 
 latex_inputs =          [] # Optional list of 'latexfile1', 'latexfile2', etc. to output bibliography for
 
-text_output =           None # Optional text output
+text_output =           None # Optional text output file
 
-text_output_format = '[{count}] {author}, "{title}," in {booktitle}{journal}{howpublished}, {year}.\n'
+text_output_format = '[{count}] {author + ", " if author else ""}{title}{", in " + venue if venue else ""}{", " + year if year else ""}.\n'

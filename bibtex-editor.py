@@ -186,21 +186,36 @@ def process_entry(params, entry):
     return
 
 
-def entry_to_text(params, entry, count):
-    field_map = defaultdict(lambda: "")
-    field_map['count'] = count
-    for f in entry.fields:
-        key = f.key
-        val = re.sub(rf'}}|{{|(\\url)', '', f.value).replace("\n", "")
-        val = re.sub(r'\s+', ' ', val)
-        if key == 'author':
-            val = re.sub(r'\s+and\s+', ', ', val, flags=re.IGNORECASE)
-        elif key not in ['url', 'howpublished']:
-            val = re.sub(r"(?:(?<=\W)|^)\w(?=\w)",
-                         lambda x: x.group(0).upper(), val)
-        field_map[key] = val
+def field_to_text(entry, key):
+    f = entry.get(key)
+    if not f:
+        return ''
+    val = re.sub(rf'}}|{{|(\\url)', '', f.value).replace("\n", "")
+    val = re.sub(r'\s+', ' ', val)
+    if key == 'author':
+        val = re.sub(r'\s+and\s+', ', ', val, flags=re.IGNORECASE)
+    elif key not in ['url', 'howpublished']:
+        val = re.sub(r"(?:(?<=\W)|^)\w(?=\w)",
+                     lambda x: x.group(0).upper(), val)
 
-    return params.text_output_format.format_map(field_map)
+    return val
+
+
+def entry_to_text(params, entry, count):
+    author = field_to_text(entry, 'author')
+    title = field_to_text(entry, 'title')
+    booktitle = field_to_text(entry, 'booktitle')
+    journal = field_to_text(entry, 'journal')
+    howpublished = field_to_text(entry, 'howpublished')
+    url = field_to_text(entry, 'url')
+    institution = field_to_text(entry, 'institution')
+    venue = booktitle if booktitle else \
+        journal if journal else \
+        howpublished if howpublished else \
+        url if url else ""
+    year = field_to_text(entry, 'year')
+
+    return eval(f"f'''{params.text_output_format}'''")
 
 
 def main():
