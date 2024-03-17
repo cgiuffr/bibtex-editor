@@ -40,17 +40,18 @@ def process_entry_extra_fields(params, entry):
         extra_fields.append(f)
 
     for f in extra_fields:
-        myfield = entry.pop(f.key)
+        myfield = entry.get(f.key)
         stats['fields_dropped_or_hidden'] += 1
         if params.extra_fields_mode == 'hide':
             myfield.key = 'HIDE' + myfield.key
-            entry.set_field(myfield)
+        else:
+            entry.pop(f.key)
 
     return
 
 
 def process_entry_booktitle(params, entry):
-    bt = entry.pop('booktitle')
+    bt = entry.get('booktitle')
     if not bt:
         return
 
@@ -62,12 +63,11 @@ def process_entry_booktitle(params, entry):
             stats['booktitles_replaced'] += num_subs
             break
 
-    entry.set_field(bt)
     return
 
 
 def process_entry_title(params, entry):
-    title = entry.pop('title')
+    title = entry.get('title')
     if not title:
         return
 
@@ -116,7 +116,6 @@ def process_entry_title(params, entry):
             title.value = match
             stats['title_caps_replaced'] += num_subs
 
-    entry.set_field(title)
     return
 
 
@@ -124,7 +123,6 @@ def process_entry_author(params, entry):
     author = entry.get('author')
     if not author or not re.match(r'.*,.*', author.value):
         return
-    author = entry.pop('author')
 
     tokens = re.split(r'\s+and\s+', author.value, flags=re.IGNORECASE)
     authors = []
@@ -138,7 +136,6 @@ def process_entry_author(params, entry):
     author.value = " and ".join(authors)
     stats['author_commas_dropped'] += 1
 
-    entry.set_field(author)
     return
 
 
@@ -146,13 +143,13 @@ def process_misc_entry(params, entry):
     if not params.misc_entry_fix_url or entry.entry_type != 'misc':
         return
 
-    f = entry.pop('howpublished')
+    f = entry.get('howpublished')
     if f:
         f2 = entry.pop('url')
         if not f2 and re.match(r'\\url{.*}', f.value):
             return
     else:
-        f = entry.pop('url')
+        f = entry.get('url')
     if not f:
         return
 
@@ -161,7 +158,6 @@ def process_misc_entry(params, entry):
 
     f.key = 'howpublished'
     f.value = f'\\url{{{url}}}'
-    entry.set_field(f)
     stats['misc_entries_fixed'] += 1
 
     return
