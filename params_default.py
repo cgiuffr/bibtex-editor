@@ -17,10 +17,18 @@ fields_order =          [
 ]
 
 booktitle_subs =        {
-    r'.*IEEE symposium on security and privacy.*' : 'S\&P',
+    r'.*IEEE Symposium on Security and Privacy.*' : 'S\&P',
     r'.*USENIX Security.*' : 'USENIX Security',
     r'.*Network and Distributed System Security.*' : 'NDSS',
-    r'.*Conference on Computer and Communications Security.*' : 'CCS'
+    r'.*Conference on Computer and Communications Security.*' : 'CCS',
+    r'.*Research in Attacks, Intrusions and Defenses.*' : 'RAID',
+    r'.*Annual Computer Security Applications Conference.*' : 'ACSAC',
+
+    r'.*Symposium on Operating Systems Principles.*' : 'SOSP',
+    r'.*Symposium on Operating Systems Design and Implementation.*' : 'OSDI',
+    r'.*European Conference on Computer Systems.*' : 'EuroSys',
+    r'.*USENIX Annual Technical Conference.*' : 'USENIX ATC',
+    r'.*Architectural Support for Programming Languages and Operating Systems.*' : 'ASPLOS'
 }
 
 title_caps =            {
