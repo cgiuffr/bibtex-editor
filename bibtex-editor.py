@@ -150,6 +150,10 @@ def process_misc_entry(params, entry):
             return
     else:
         f = entry.get('url')
+        if not f:
+            f = entry.get('note')
+        if not f:
+            f = entry.get('addendum')
     if not f:
         return
 
