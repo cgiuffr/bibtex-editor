@@ -7,13 +7,17 @@ bibtex_encoding =       'UTF-8'
 bibtex_input =          '<your_file_here.bib>'
 bibtex_output =         '<your_file_here.bib>'
 
+url_field_names =       ['howpublished', 'url', 'note', 'addendum']
+url_field_dest_name =   'howpublished' # which field to use for (misc) urls in output
+
+strip_nonmisc_urls =    True # strip url fields from nonmisc entries
 strip_dup_keys =        True # Strip duplicate entry keys
 
 extra_fields_mode =     'drop' # 'drop', 'hide', or None (for fields not in fields_order)
 
 sort_fields =           True # Sort fields according to fields_order
 fields_order =          [
-    'title', 'author', 'booktitle', 'journal', 'howpublished', 'url', 'year', 'institution'
+    'title', 'author', 'booktitle', 'journal', url_field_dest_name, 'year', 'institution'
 ]
 
 booktitle_subs =        {
@@ -32,7 +36,7 @@ booktitle_subs =        {
 }
 
 title_caps =            {
-    'Chrome', 'Firefox', 'Valgrind', 'Clang', 'C', 'Linux', 'Windows', 'Spectre', 'Meltdown', 'Intel', 'Mozilla', 'Google', 'Microsoft', 'Apple', 'ARM', 'Rust', 'Java', 'Python', 'JavaScript', 'Xen', 'Rowhammer', 'Rowhammering', 'VTable', 'Android', 'iOS', 'Dr'
+    'Chrome', 'Firefox', 'Valgrind', 'Clang', 'C', 'Linux', 'Windows', 'Spectre', 'Meltdown', 'Intel', 'Mozilla', 'Google', 'Microsoft', 'Apple', 'ARM', 'Rust', 'Java', 'Python', 'JavaScript', 'Xen', 'Rowhammer', 'Rowhammering', 'VTable', 'Android', 'iOS', 'Dr', 'L3'
 }
 title_strip_caps =      True # Strip existing curly braces
 title_camel_caps =      True # Capitalize camel-case words

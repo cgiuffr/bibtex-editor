@@ -34,10 +34,12 @@ def process_entry_extra_fields(params, entry):
         return
 
     extra_fields = []
+    should_strip_urls = params.strip_nonmisc_urls and entry.entry_type != 'misc'
     for f in entry.fields:
-        if f.key in params.fields_order:
-            continue
-        extra_fields.append(f)
+        if should_strip_urls and f.key == params.url_field_dest_name:
+            extra_fields.append(f)
+        elif not f.key in params.fields_order:
+            extra_fields.append(f)
 
     for f in extra_fields:
         myfield = entry.get(f.key)
@@ -139,30 +141,36 @@ def process_entry_author(params, entry):
     return
 
 
-def process_misc_entry(params, entry):
-    if not params.misc_entry_fix_url or entry.entry_type != 'misc':
-        return
-
-    f = entry.get('howpublished')
-    if f:
-        f2 = entry.pop('url')
-        if not f2 and re.match(r'\\url{.*}', f.value):
-            return
-    else:
-        f = entry.get('url')
-        if not f:
-            f = entry.get('note')
-        if not f:
-            f = entry.get('addendum')
+def process_misc_url_field(params, entry, field_name):
+    f = entry.get(field_name)
     if not f:
-        return
+        return None
 
     url = re.sub(rf'\\url{{(.*)}}', r'\1', f.value)
     url = re.sub(rf'}}|{{', '', url)
 
-    f.key = 'howpublished'
+    f.key = params.url_field_dest_name
     f.value = f'\\url{{{url}}}'
     stats['misc_entries_fixed'] += 1
+
+    for n in params.url_field_names:
+        if n != f.key:
+            entry.pop(n)
+
+    return f
+
+
+def process_misc_entry(params, entry):
+    if not params.misc_entry_fix_url or entry.entry_type != 'misc':
+        return
+
+    f = process_misc_url_field(params, entry, 'howpublished')
+    if f:
+        return
+    for name in params.url_field_names:
+        f = process_misc_url_field(params, entry, name)
+        if f:
+            return
 
     return
 
@@ -180,17 +188,17 @@ def process_entry_field_order(params, entry):
 
 
 def process_entry(params, entry):
-    process_entry_extra_fields(params, entry)
     process_entry_booktitle(params, entry)
     process_entry_title(params, entry)
     process_entry_author(params, entry)
     process_misc_entry(params, entry)
+    process_entry_extra_fields(params, entry)
     process_entry_field_order(params, entry)
 
     return
 
 
-def field_to_text(entry, key):
+def field_to_text(params, entry, key):
     f = entry.get(key)
     if not f:
         return ''
@@ -198,7 +206,7 @@ def field_to_text(entry, key):
     val = re.sub(r'\s+', ' ', val)
     if key == 'author':
         val = re.sub(r'\s+and\s+', ', ', val, flags=re.IGNORECASE)
-    elif key not in ['url', 'howpublished']:
+    elif key not in params.url_field_names:
         val = re.sub(r"(?:(?<=\W)|^)\w(?=\w)",
                      lambda x: x.group(0).upper(), val)
 
@@ -206,18 +214,16 @@ def field_to_text(entry, key):
 
 
 def entry_to_text(params, entry, count):
-    author = field_to_text(entry, 'author')
-    title = field_to_text(entry, 'title')
-    booktitle = field_to_text(entry, 'booktitle')
-    journal = field_to_text(entry, 'journal')
-    howpublished = field_to_text(entry, 'howpublished')
-    url = field_to_text(entry, 'url')
-    institution = field_to_text(entry, 'institution')
+    author = field_to_text(params, entry, 'author')
+    title = field_to_text(params, entry, 'title')
+    booktitle = field_to_text(params, entry, 'booktitle')
+    journal = field_to_text(params, entry, 'journal')
+    url = field_to_text(params, entry, params.url_field_dest_name)
+    institution = field_to_text(params, entry, 'institution')
     venue = booktitle if booktitle else \
         journal if journal else \
-        howpublished if howpublished else \
         url if url else ""
-    year = field_to_text(entry, 'year')
+    year = field_to_text(params, entry, 'year')
 
     return eval(f"f'''{params.text_output_format}'''")
 
