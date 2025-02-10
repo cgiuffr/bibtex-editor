@@ -68,18 +68,21 @@ def process_entry_booktitle(params, entry):
     return
 
 
-def process_entry_title(params, entry):
+def process_entry_title(library, params, entry):
     title = entry.get('title')
     if not title:
-        return
+        return False
 
     title_hash = re.sub(r'[^\w]', '', title.value).lower()
     if title_hash in title_idx:
         e = title_idx[title_hash]
         e_title = e.get('title')
         logging.warning(
-            f'Found possible duplicate titles:\n - "{e.key}" -> "{e_title.value}"\n - "{entry.key}" -> "{title.value}"')
+            f'Found duplicate titles:\n - "{e.key}" -> "{e_title.value}"\n - "{entry.key}" -> "{title.value}"')
         stats['dup_titles'] += 1
+        if params.strip_dup_titles:
+            library.remove(entry)
+            return True
     else:
         title_idx[title_hash] = entry
 
@@ -118,7 +121,7 @@ def process_entry_title(params, entry):
             title.value = match
             stats['title_caps_replaced'] += num_subs
 
-    return
+    return False
 
 
 def process_entry_author(params, entry):
@@ -187,15 +190,17 @@ def process_entry_field_order(params, entry):
     return
 
 
-def process_entry(params, entry):
+def process_entry(library, params, entry):
     process_entry_booktitle(params, entry)
-    process_entry_title(params, entry)
+    dropped = process_entry_title(library, params, entry)
+    if dropped:
+        return True
     process_entry_author(params, entry)
     process_misc_entry(params, entry)
     process_entry_extra_fields(params, entry)
     process_entry_field_order(params, entry)
 
-    return
+    return False
 
 
 def field_to_text(params, entry, key):
@@ -284,7 +289,7 @@ def main():
 
     # Process entries
     for e in library.entries:
-        process_entry(params, e)
+        process_entry(library, params, e)
     logging.info('Stats:')
     pprint.pprint(stats)
 

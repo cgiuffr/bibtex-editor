@@ -12,6 +12,7 @@ url_field_dest_name =   'howpublished' # which field to use for (misc) urls in o
 
 strip_nonmisc_urls =    True # strip url fields from nonmisc entries
 strip_dup_keys =        True # Strip duplicate entry keys
+strip_dup_titles =      False # Strip duplicate titles
 
 extra_fields_mode =     'drop' # 'drop', 'hide', or None (for fields not in fields_order)
 
